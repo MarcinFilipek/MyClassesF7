@@ -6,6 +6,7 @@
  */
 
 #include "CGraphics.h"
+#include "CMathFunction.h"
 
 uint32_t CGraphics::m_destStartAddress;
 
@@ -13,7 +14,7 @@ void CGraphics::setDestStartAddress(uint32_t address) {
 	m_destStartAddress = address;
 }
 void CGraphics::drawPixel(uint16_t x, uint16_t y, uint32_t rgb) {
-	*(__IO uint32_t*) (m_destStartAddress + (4 * (y*m_width + x))) = rgb;
+	*(__IO uint32_t*) (m_destStartAddress + (4 * (y * m_width + x))) = rgb;
 }
 
 void CGraphics::drawBlending(uint32_t srcAddress1, uint32_t srcAddress2,
@@ -43,4 +44,22 @@ void CGraphics::drawBlending(uint32_t srcAddress1, uint32_t srcAddress2,
 	HAL_DMA2D_BlendingStart(&m_dma2dHandle, srcAddress1, srcAddress2,
 			destAddress, width, height);
 	HAL_DMA2D_PollForTransfer(&m_dma2dHandle, 1000);
+}
+
+/*
+ *	xPixel 		- wspolrzedna x punktu obracanego
+ *	yPixel 		- wspolrzedna y punktu obracanego
+ *	x			- wspolrzedna x punktu obrotu
+ *	y			- wspolrzenda y punktu obrotu
+ *	alfa		- kat obrotu
+ *	xPixelPrim	- wspolrzena x punktu obracanego po obrocie
+ *	yPixelPrim	- wspolrzena y punktu obracanego po obrocie
+ */
+void CGraphics::rotationPixel(uint16_t xPixel, uint16_t yPixel, uint16_t x,
+		uint16_t y, uint16_t alfa, uint16_t* xPixelPrim, uint16_t* yPixelPrim) {
+
+	*xPixelPrim = (xPixel - x) * CMathFunction::getCos(alfa)
+			+ (yPixel - y) * CMathFunction::getSin(alfa) + x;
+	*yPixelPrim = (xPixel - x) * CMathFunction::getSin(alfa)
+			+ (yPixel - y) * CMathFunction::getCos(alfa) + y;
 }
