@@ -12,7 +12,8 @@
 
 class CMathFunction {
 public:
-	float getSin(uint16_t alfa);
+	static float getSin(uint16_t alfa);
+	static float getCos(uint16_t alfa);
 private:
 	static const float m_sinTab[91];
 protected:
