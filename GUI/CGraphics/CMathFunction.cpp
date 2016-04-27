@@ -54,3 +54,19 @@ float CMathFunction::getSin(uint16_t alfa) {
 	}
 	return sin;
 }
+
+float CMathFunction::getCos(uint16_t alfa) {
+	float cos = 0.0;
+	uint16_t tempAngle = 0;
+	tempAngle = 90 - (alfa % 90);
+	if ((alfa / 90 == 0) || ((alfa / 90) % 4 == 0)) {
+		cos = m_sinTab[tempAngle];
+	} else if ((alfa / 90) % 3 == 0) {
+		cos = m_sinTab[90 - tempAngle];
+	} else if ((alfa / 90) % 2 == 0) {
+		cos = m_sinTab[tempAngle] * (-1);
+	} else if ((alfa / 90) % 1 == 0) {
+		cos = m_sinTab[90 - tempAngle] * (-1);
+	}
+	return cos;
+}
